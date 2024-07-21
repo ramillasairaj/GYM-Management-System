@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Fee Package</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        nav {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 10px 0;
+            text-align: center;
+            position: absolute;
+            top: 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ddd;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin-top: 60px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .edit-form input, .edit-form select {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+         
+        <a href="addmember.html">Add Member</a>
+        <a href="updateanddelete.html">Update/Delete Members</a>
+        <a href="createbills.html">Create Bills</a>
+        <a href="assign feepackage.html">Assign Fee Package</a>
+        <a href="monthly.html">Assign Notification for Monthly</a>
+        <a href="notification.html">Report Export</a>
+        <a href="suplamentstore.html">Supplement Store</a>
+        <a href="diatplan.html">Diet Details</a>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <div class="container">
+        <h2>Assign Fee Package</h2>
+        <table id="packagesTable">
+            <thead>
+                <tr>
+                    <th>Member Name</th>
+                    <th>Package</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Packages will be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="edit-form" id="editForm">
+            <h3>Edit Fee Package</h3>
+            <label for="editName">Member Name:</label>
+            <input type="text" id="editName" name="name" required>
+            <label for="editPackage">Package:</label>
+            <select id="editPackage" name="package" required>
+                <option value="Basic">Basic</option>
+                <option value="Premium">Premium</option>
+                <option value="VIP">VIP</option>
+            </select>
+            <label for="editStartDate">Start Date:</label>
+            <input type="date" id="editStartDate" name="startDate" required>
+            <label for="editEndDate">End Date:</label>
+            <input type="date" id="editEndDate" name="endDate" required>
+            <button onclick="saveEdit()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        const packages = [
+            { id: 1, name: 'sairaj', package: 'Basic', startDate: '2024-01-01', endDate: '2024-06-30' },
+            { id: 2, name: 'sai', package: 'Premium', startDate: '2024-02-01', endDate: '2024-07-31' },
+            { id: 3, name: 'Mike ', package: 'VIP', startDate: '2024-03-01', endDate: '2024-08-31' }
+        ];
+
+        function loadPackages() {
+            const tableBody = document.querySelector('#packagesTable tbody');
+            tableBody.innerHTML = '';
+            packages.forEach(pkg => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${pkg.name}</td>
+                    <td>${pkg.package}</td>
+                    <td>${pkg.startDate}</td>
+                    <td>${pkg.endDate}</td>
+                    <td>
+                        <button onclick="editPackage(${pkg.id})">Edit</button>
+                        <button onclick="deletePackage(${pkg.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editPackage(id) {
+            const pkg = packages.find(p => p.id === id);
+            document.getElementById('editName').value = pkg.name;
+            document.getElementById('editPackage').value = pkg.package;
+            document.getElementById('editStartDate').value = pkg.startDate;
+            document.getElementById('editEndDate').value = pkg.endDate;
+            document.getElementById('editForm').style.display = 'block';
+            document.getElementById('editForm').dataset.id = id;
+        }
+
+        function saveEdit() {
+            const id = document.getElementById('editForm').dataset.id;
+            const pkg = packages.find(p => p.id == id);
+            pkg.name = document.getElementById('editName').value;
+            pkg.package = document.getElementById('editPackage').value;
+            pkg.startDate = document.getElementById('editStartDate').value;
+            pkg.endDate = document.getElementById('editEndDate').value;
+            document.getElementById('editForm').style.display = 'none';
+            loadPackages();
+        }
+
+        function deletePackage(id) {
+            const index = packages.findIndex(p => p.id === id);
+            packages.splice(index, 1);
+            loadPackages();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPackages);
+    </script>
+</body>
+</html>

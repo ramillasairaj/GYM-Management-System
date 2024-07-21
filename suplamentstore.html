@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplement Store</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        nav {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 10px 0;
+            text-align: center;
+            position: absolute;
+            top: 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ddd;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin-top: 60px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .edit-form input {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+         
+        <a href="addmember.html">Add Member</a>
+        <a href="updateanddelete.html">Update/Delete Members</a>
+        <a href="createbills.html">Create Bills</a>
+        <a href="assign feepackage.html">Assign Fee Package</a>
+        <a href="monthly.html">Assign Notification for Monthly</a>
+        <a href="notification.html">Report Export</a>
+        <a href="suplamentstore.html">Supplement Store</a>
+        <a href="diatplan.html">Diet Details</a>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <div class="container">
+        <h2>Supplement Store</h2>
+        <table id="supplementsTable">
+            <thead>
+                <tr>
+                    <th>Supplement Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Supplements will be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="edit-form" id="editForm">
+            <h3>Edit Supplement</h3>
+            <label for="editName">Supplement Name:</label>
+            <input type="text" id="editName" name="name" required>
+            <label for="editPrice">Price:</label>
+            <input type="number" id="editPrice" name="price" required>
+            <label for="editQuantity">Quantity:</label>
+            <input type="number" id="editQuantity" name="quantity" required>
+            <button onclick="saveEdit()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        const supplements = [
+            { id: 1, name: 'Protein Powder', price: 30, quantity: 20 },
+            { id: 2, name: 'Creatine', price: 20, quantity: 15 },
+            { id: 3, name: 'Multivitamins', price: 10, quantity: 50 }
+        ];
+
+        function loadSupplements() {
+            const tableBody = document.querySelector('#supplementsTable tbody');
+            tableBody.innerHTML = '';
+            supplements.forEach(supplement => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${supplement.name}</td>
+                    <td>${supplement.price}</td>
+                    <td>${supplement.quantity}</td>
+                    <td>
+                        <button onclick="editSupplement(${supplement.id})">Edit</button>
+                        <button onclick="deleteSupplement(${supplement.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editSupplement(id) {
+            const supplement = supplements.find(s => s.id === id);
+            document.getElementById('editName').value = supplement.name;
+            document.getElementById('editPrice').value = supplement.price;
+            document.getElementById('editQuantity').value = supplement.quantity;
+            document.getElementById('editForm').style.display = 'block';
+            document.getElementById('editForm').dataset.id = id;
+        }
+
+        function saveEdit() {
+            const id = document.getElementById('editForm').dataset.id;
+            const supplement = supplements.find(s => s.id == id);
+            supplement.name = document.getElementById('editName').value;
+            supplement.price = document.getElementById('editPrice').value;
+            supplement.quantity = document.getElementById('editQuantity').value;
+            document.getElementById('editForm').style.display = 'none';
+            loadSupplements();
+        }
+
+        function deleteSupplement(id) {
+            const index = supplements.findIndex(s => s.id === id);
+            supplements.splice(index, 1);
+            loadSupplements();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSupplements);
+    </script>
+</body>
+</html>

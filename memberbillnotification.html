@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Bill Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        nav {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 10px 0;
+            text-align: center;
+            position: absolute;
+            top: 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ddd;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin-top: 60px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            padding: 5px 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .notification-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .notification-form input, .notification-form select {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="viewbillrecipts.html">View Bill Receipts</a>
+        <a href="memberbillnotification.html">View Bill Notification</a>
+        <a href="index.html">Logout</a>
+    </nav>
+
+    <div class="container">
+        <h2>View Bill Notifications</h2>
+        <table id="notificationsTable">
+            <thead>
+                <tr>
+                    <th>Member Name</th>
+                    <th>Notification Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Notifications will be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="notification-form" id="notificationForm">
+            <h3>Add/Edit Notification</h3>
+            <label for="notifName">Member Name:</label>
+            <input type="text" id="notifName" name="name" required>
+            <label for="notifDate">Notification Date:</label>
+            <input type="date" id="notifDate" name="date" required>
+            <label for="notifAmount">Amount:</label>
+            <input type="number" id="notifAmount" name="amount" required>
+            <label for="notifStatus">Status:</label>
+            <select id="notifStatus" name="status">
+                <option value="sent">Sent</option>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+            </select>
+            <button onclick="saveNotification()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        const notifications = [
+            { id: 1, name: 'Sairaj', date: '2024-07-15', amount: 500, status: 'pending' },
+            { id: 2, name: 'Raju', date: '2024-07-16', amount: 700, status: 'pending' },
+            { id: 3, name: 'Mike', date: '2024-07-17', amount: 600, status: 'paid' }
+        ];
+
+        function loadNotifications() {
+            const tableBody = document.querySelector('#notificationsTable tbody');
+            tableBody.innerHTML = '';
+            notifications.forEach(notification => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${notification.name}</td>
+                    <td>${notification.date}</td>
+                    <td>${notification.amount}</td>
+                    <td>${notification.status}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function saveNotification() {
+            const id = document.getElementById('notificationForm').dataset.id;
+            if (id) {
+                // Editing existing notification
+                const notification = notifications.find(n => n.id == id);
+                notification.name = document.getElementById('notifName').value;
+                notification.date = document.getElementById('notifDate').value;
+                notification.amount = document.getElementById('notifAmount').value;
+                notification.status = document.getElementById('notifStatus').value;
+                document.getElementById('notificationForm').style.display = 'none';
+            } else {
+                // Adding new notification
+                const newNotification = {
+                    id: notifications.length + 1,
+                    name: document.getElementById('notifName').value,
+                    date: document.getElementById('notifDate').value,
+                    amount: document.getElementById('notifAmount').value,
+                    status: document.getElementById('notifStatus').value
+                };
+                notifications.push(newNotification);
+            }
+            loadNotifications();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+    </script>
+</body>
+</html>

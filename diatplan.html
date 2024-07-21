@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        nav {
+            width: 100%;
+            background-color: #4CAF50;
+            padding: 10px 0;
+            text-align: center;
+            position: absolute;
+            top: 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        nav a:hover {
+            color: #ddd;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin-top: 60px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .edit-form input, .edit-form textarea {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+           
+        <a href="addmember.html">Add Member</a>
+        <a href="updateanddelete.html">Update/Delete Members</a>
+        <a href="createbills.html">Create Bills</a>
+        <a href="assign feepackage.html">Assign Fee Package</a>
+        <a href="monthly.html">Assign Notification for Monthly</a>
+        <a href="notification.html">Report Export</a>
+        <a href="suplamentstore.html">Supplement Store</a>
+        <a href="diatplan.html">Diet Details</a>
+        <a href="index.html">Logout</a>
+    </nav>
+    <div class="container">
+        <h2>Diet Details</h2>
+        <table id="dietTable">
+            <thead>
+                <tr>
+                    <th>Member Name</th>
+                    <th>Diet Plan</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Diet details will be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="edit-form" id="editForm">
+            <h3>Edit Diet Plan</h3>
+            <label for="editName">Member Name:</label>
+            <input type="text" id="editName" name="name" required>
+            <label for="editDiet">Diet Plan:</label>
+            <textarea id="editDiet" name="diet" rows="4" required></textarea>
+            <button onclick="saveEdit()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        const dietDetails = [
+            { id: 1, name: 'sairaj', diet: 'Breakfast: Oatmeal\nLunch: Chicken Salad\nDinner: Grilled Fish' },
+            { id: 2, name: 'raj', diet: 'Breakfast: Smoothie\nLunch: Quinoa Salad\nDinner: Stir-fry Vegetables' },
+            { id: 3, name: 'Mike', diet: 'Breakfast: Eggs and Toast\nLunch: Turkey Sandwich\nDinner: Pasta' }
+        ];
+
+        function loadDietDetails() {
+            const tableBody = document.querySelector('#dietTable tbody');
+            tableBody.innerHTML = '';
+            dietDetails.forEach(detail => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${detail.name}</td>
+                    <td>${detail.diet.replace(/\n/g, '<br>')}</td>
+                    <td>
+                        <button onclick="editDiet(${detail.id})">Edit</button>
+                        <button onclick="deleteDiet(${detail.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editDiet(id) {
+            const detail = dietDetails.find(d => d.id === id);
+            document.getElementById('editName').value = detail.name;
+            document.getElementById('editDiet').value = detail.diet;
+            document.getElementById('editForm').style.display = 'block';
+            document.getElementById('editForm').dataset.id = id;
+        }
+
+        function saveEdit() {
+            const id = document.getElementById('editForm').dataset.id;
+            const detail = dietDetails.find(d => d.id == id);
+            detail.name = document.getElementById('editName').value;
+            detail.diet = document.getElementById('editDiet').value;
+            document.getElementById('editForm').style.display = 'none';
+            loadDietDetails();
+        }
+
+        function deleteDiet(id) {
+            const index = dietDetails.findIndex(d => d.id === id);
+            dietDetails.splice(index, 1);
+            loadDietDetails();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadDietDetails);
+    </script>
+</body>
+</html>
